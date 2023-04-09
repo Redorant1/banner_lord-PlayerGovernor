@@ -40,27 +40,6 @@ namespace PlayerGovernor
         }
     }
 
-    [HarmonyPatch(typeof(LeaveSettlementAction), "ApplyForParty")]
-    class PlayerGovernorLeaveAspect
-    {
-
-        [HarmonyBefore]
-        public static void Prefix(MobileParty mobileParty)
-        {
-            if (mobileParty == null
-                || mobileParty.CurrentSettlement == null
-                || mobileParty.CurrentSettlement.Town == null
-                || !Hero.MainHero.Equals(mobileParty.LeaderHero)
-                || !mobileParty.CurrentSettlement.Town.Equals(PlayerGovernorSetttlementAspect.governorSettlement))
-            {
-                return;
-            }
-            MBTextManager.SetTextVariable("SETTTLEMENT_NAME", mobileParty.CurrentSettlement.Name.ToString());
-            MBInformationManager.AddQuickInformation(new TextObject("{=yJTIwVExFTU} player is no longer the governor of : {SETTTLEMENT_NAME}"));
-            PlayerGovernorSetttlementAspect.governorSettlement = null;
-        }
-    }
-
     [HarmonyPatch(typeof(Town), "Governor", MethodType.Getter)]
     class PlayerGovernorSetttlementAspect
     {
